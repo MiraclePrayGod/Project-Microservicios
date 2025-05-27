@@ -1,0 +1,35 @@
+server:
+  port: 8080
+
+eureka:
+  client:
+    serviceUrl:
+      #defaultZone: http://localhost:8090/eureka
+      defaultZone: ${EUREKA_URI:http://localhost:8090/eureka}
+  instance:
+    #hostname: localhost
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+    # eureka:
+    #client:
+    # serviceUrl:
+    #  defaultZone: http://localhost:8090/eureka
+    # instance:
+  #  hostname: localhost
+
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enable: true
+      routes:
+        - id: dp-cliente  # El nombre de la ruta para enrutar las solicitudes
+          uri: lb://dp-cliente  # Enviar las solicitudes a dmb-curso a través de Eureka (Load Balancer)
+          predicates:
+            - Path=/clientes/**
+        - id: dp-notificacion  # El nombre de la ruta para enrutar las solicitudes
+          uri: lb://dp-notificacion   # Enviar las solicitudes a dmb-curso a través de Eureka (Load Balancer)
+          predicates:
+            - Path=/notificaciones/**
+
