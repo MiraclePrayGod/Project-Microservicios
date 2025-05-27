@@ -1,6 +1,6 @@
 spring:
   application:
-    name: dp-cliente
+    name: pd-cliente
   datasource:
     url: jdbc:mysql://localhost:3306/dp-cliente
     username: root

@@ -1,14 +1,16 @@
 spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/dp-notificacion?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-    username: root
-    password:
-    driver-class-name: com.mysql.cj.jdbc.Driver
+  application:
+    name: dp-notificacion
+  profiles:
+    active: development
+  config:
+    import: optional:configserver:http://root:123456@localhost:7070
 
-  jpa:
-    hibernate:
-      ddl-auto: update  # puede ser none, validate, update, create, create-drop seg?n necesidad
-    show-sql: true      # para mostrar las consultas SQL en consola
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always

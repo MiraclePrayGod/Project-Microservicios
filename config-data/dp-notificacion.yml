@@ -2,7 +2,7 @@ spring:
   application:
     name: dp-notificacion
   datasource:
-    url: jdbc:mysql://localhost:3306/dp-notificaciones
+    url: jdbc:mysql://localhost:3306/dp-notificacion
     username: root
     password:
     driver-class-name: com.mysql.cj.jdbc.Driver
