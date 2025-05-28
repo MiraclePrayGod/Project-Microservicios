@@ -4,20 +4,20 @@ package contacloud.dpnotificacion.entity;
 import contacloud.dpnotificacion.dto.ClienteDto;
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Data
 public class Notificacion {
+
+
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer notificacionId;
     private Integer clienteId;
     private String tipo; // email, SMS, push
-    private String email; // Canal usado para enviar la notificación
     private String asunto;
     @Lob
     private String mensaje;
@@ -32,12 +32,11 @@ public class Notificacion {
     }
 
     public Notificacion(Integer notificacionId, Integer clienteId, String tipo,
-                        String email, String asunto, String mensaje, String estado,
+                         String asunto, String mensaje, String estado,
                         LocalDateTime fechaEnvio, String respuesta,ClienteDto clienteDto) {
         this.notificacionId = notificacionId;
         this.clienteId = clienteId;
         this.tipo = tipo;
-        this.email = email;
         this.asunto = asunto;
         this.mensaje = mensaje;
         this.estado = estado;
@@ -68,14 +67,6 @@ public class Notificacion {
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String canal) {
-        this.email = email;
     }
 
     public String getAsunto() {

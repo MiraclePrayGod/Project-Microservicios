@@ -6,6 +6,23 @@ spring:
   config:
     import: optional:configserver:http://root:123456@localhost:7070
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: reginaldobuendia@gmail.com  # Usa una variable de entorno para el correo electrónico
+    password: "ceeqpnfrwtlkqlpq"  # Usa una variable de entorno para la contraseña o la contraseña de la aplicación
+    protocol: smtp
+    smtp:
+      auth: true
+      starttls:
+        enable: true
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 management:
   endpoints:
     web:
@@ -14,3 +31,8 @@ management:
   endpoint:
     health:
       show-details: always
+
+logging:
+  level:
+    org.springframework.mail: DEBUG   # Habilitar logging detallado para Spring Mail
+    org.springframework.web: DEBUG    # Habilitar logging detallado para solicitudes web

@@ -1,7 +1,7 @@
 package com.contacloud.pdinventario.controller;
 
 import com.contacloud.pdinventario.model.MovimientoStock;
-import com.contacloud.pdinventario.service.impl.MovimientoStockService;
+import com.contacloud.pdinventario.service.MovimientoStockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

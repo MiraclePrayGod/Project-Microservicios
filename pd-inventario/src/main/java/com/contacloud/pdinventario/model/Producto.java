@@ -92,4 +92,6 @@ public class Producto {
     public void setFechaCreacion(LocalDateTime fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
+
+//    dan me llegas al pincho
 }

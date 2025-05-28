@@ -25,7 +25,7 @@ spring:
           enable: true
       routes:
         - id: dp-cliente  # El nombre de la ruta para enrutar las solicitudes
-          uri: lb://dp-cliente  # Enviar las solicitudes a dmb-curso a través de Eureka (Load Balancer)
+          uri: lb://pd-cliente  # Enviar las solicitudes a dmb-curso a través de Eureka (Load Balancer)
           predicates:
             - Path=/clientes/**
         - id: dp-notificacion  # El nombre de la ruta para enrutar las solicitudes

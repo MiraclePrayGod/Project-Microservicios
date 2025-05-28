@@ -11,6 +11,7 @@ public interface NotificacionService {
     Optional<Notificacion> buscar(Integer id);
     Notificacion guardar(Notificacion notificacion);
     Notificacion actualizar(Integer id , String estado);
-    Notificacion enviarNotificacion (Integer clienteId, String asunto, String mensaje);
+    String sendEmail(Integer notificacionId,Integer clienteId);
+
 
 }

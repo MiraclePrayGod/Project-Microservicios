@@ -37,4 +37,25 @@ public class NotificacionController {
         return ResponseEntity.ok(NotificacionActualizado);
     }
 
+    @PostMapping("/enviar/{notificacionId}/{clienteId}")
+    public ResponseEntity<String> sendEmail(@PathVariable Integer notificacionId, @PathVariable Integer clienteId) {
+        try {
+            // Validación básica de los parámetros (ajustar según lo que necesites)
+            if (notificacionId == null || clienteId == null) {
+                return ResponseEntity.status(400).body("Los parámetros no son válidos.");
+            }
+
+            // Llamada al servicio que envía el correo
+            String token = notificacionService.sendEmail(notificacionId, clienteId);
+
+            // Respuesta exitosa con código 200
+            return ResponseEntity.status(200).body("Correo enviado con éxito. Token generado: " + token);
+
+        } catch (Exception e) {
+            // Respuesta con código 500 en caso de error
+            return ResponseEntity.status(500).body("Error al enviar el correo: " + e.getMessage());
+        }
+    }
+
+
 }
