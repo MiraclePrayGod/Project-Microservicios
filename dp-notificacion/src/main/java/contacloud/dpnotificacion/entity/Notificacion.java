@@ -10,9 +10,6 @@ import java.time.LocalDateTime;
 @Data
 public class Notificacion {
 
-
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer notificacionId;

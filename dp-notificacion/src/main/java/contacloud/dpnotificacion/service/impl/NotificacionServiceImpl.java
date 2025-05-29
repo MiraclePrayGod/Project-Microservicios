@@ -5,13 +5,10 @@ import contacloud.dpnotificacion.entity.Notificacion;
 import contacloud.dpnotificacion.feing.ClienteFeing;
 import contacloud.dpnotificacion.repository.NotificacionRepository;
 import contacloud.dpnotificacion.service.NotificacionService;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,15 +19,9 @@ import java.util.UUID;
 @Service
 public class NotificacionServiceImpl implements NotificacionService {
 
-    @Value("${username}")
-    private String sender;
-
     // Constructor para la inyección de dependencias
-    private final JavaMailSender javaMailSender;
     @Autowired
-    public NotificacionServiceImpl(JavaMailSender javaMailSender) {
-        this.javaMailSender = javaMailSender;
-    }
+    private  JavaMailSender javaMailSender;
 
     @Autowired
     private NotificacionRepository notificacionRepository;
@@ -38,8 +29,6 @@ public class NotificacionServiceImpl implements NotificacionService {
     private ClienteFeing clienteFeing;
     @Autowired
     private  JavaMailSender mailSender;
-
-
 
     @Override
     public List<Notificacion> listar() {
@@ -118,18 +107,13 @@ public class NotificacionServiceImpl implements NotificacionService {
         if (email == null || email.isEmpty()) {
             throw new IllegalArgumentException("El cliente no tiene un correo electrónico válido.");
         }
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
-        try {
+            SimpleMailMessage mimeMessage = new SimpleMailMessage();
+            mimeMessage.setFrom("reginaldomayhuire@upeu.edu.pe");
+            mimeMessage.setTo(email);
+            mimeMessage.setText(messageEmail);
             mimeMessage.setSubject("Prueba de correo");
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-            helper.setTo(email);
-            helper.setText(messageEmail);
-            helper.setFrom(sender);
-            javaMailSender.send(mimeMessage);
-        }catch (MessagingException e){
-            throw new RuntimeException(e);
-        }
+            mailSender.send(mimeMessage);
         String token = UUID.randomUUID().toString();
         return token;
     }

@@ -1,0 +1,71 @@
+package contacloud.dplicencias.entity;
+
+
+import contacloud.dplicencias.dto.VentaDto;
+import jakarta.persistence.*;
+import lombok.Data;
+
+
+@Data
+@Entity
+public class LicenciaDetalle {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer detalleId;
+    private Integer ventaId;
+    private String codigoLicencia;  // Código único de la licencia
+    private String contrasena;
+    @Transient
+    private VentaDto ventaDto;
+
+    public LicenciaDetalle() {
+    }
+
+    public LicenciaDetalle(Integer detalleId, Integer ventadId,String codigoLicencia, String contrasena, VentaDto ventaDto) {
+        this.detalleId = detalleId;
+        this.ventaId = ventaId;
+        this.codigoLicencia = codigoLicencia;
+        this.contrasena = contrasena;
+        this.ventaDto = ventaDto;
+    }
+
+    public Integer getDetalleId() {
+        return detalleId;
+    }
+
+    public void setDetalleId(Integer detalleId) {
+        this.detalleId = detalleId;
+    }
+
+    public Integer getVentaId() {
+        return ventaId;
+    }
+
+    public void setVentaId(Integer ventaId) {
+        this.ventaId = ventaId;
+    }
+
+    public String getCodigoLicencia() {
+        return codigoLicencia;
+    }
+
+    public void setCodigoLicencia(String codigoLicencia) {
+        this.codigoLicencia = codigoLicencia;
+    }
+
+    public String getContrasena() {
+        return contrasena;
+    }
+
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
+    }
+
+    public VentaDto getVentaDto() {
+        return ventaDto;
+    }
+
+    public void setVentaDto(VentaDto ventaDto) {
+        this.ventaDto = ventaDto;
+    }
+}

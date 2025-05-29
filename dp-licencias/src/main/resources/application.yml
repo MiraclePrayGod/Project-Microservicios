@@ -1,22 +1,10 @@
 spring:
   application:
-    name: dp-notificacion
+    name: dp-licencias
   profiles:
     active: development
   config:
     import: optional:configserver:http://root:123456@localhost:7070
-
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: reginaldomayhuire@upeu.edu.pe
-    password: 'ceeqpnfrwtlkqlpq'
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
 
 management:
   endpoints:
