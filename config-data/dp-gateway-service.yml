@@ -36,3 +36,7 @@ spring:
           uri: lb://dp-licencias   # Enviar las solicitudes a dmb-curso a través de Eureka (Load Balancer)
           predicates:
             - Path=/licencias/**
+        - id: pd-venta  # El nombre de la ruta para enrutar las solicitudes
+          uri: lb://pd-venta   # Enviar las solicitudes a dmb-curso a través de Eureka (Load Balancer)
+          predicates:
+            - Path=/ventas/**
