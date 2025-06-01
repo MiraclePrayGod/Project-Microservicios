@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@RestController("/licencias")
-@RequestMapping
+@RestController
+@RequestMapping("/licencias")
 public class LicenciaController {
 
     @Autowired
