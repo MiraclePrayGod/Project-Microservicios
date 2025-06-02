@@ -1,6 +1,8 @@
 package contacloud.dplicencias.service.impl;
 
 import contacloud.dplicencias.dto.ClienteDto;
+import contacloud.dplicencias.dto.LicenciaCreateDto;
+import contacloud.dplicencias.dto.LicenciaDetalleCreateDto;
 import contacloud.dplicencias.dto.VentaDto;
 import contacloud.dplicencias.entity.Licencia;
 import contacloud.dplicencias.entity.LicenciaDetalle;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,39 +48,64 @@ public class LicenciaSeriveImpl implements LicenciaService {
 
     @Override
     public List<Licencia> listar() {
-        return licenciaRepository.findAll();
+        List<Licencia> licencias = licenciaRepository.findAll();
+        for (Licencia licencia : licencias) {
+            ClienteDto clienteDto = clienteFeing.obtenerPorId(licencia.getClienteId()).getBody();
+            licencia.setClienteDto(clienteDto);
+
+            for (LicenciaDetalle detalle: licencia.getDetalles()) {
+                VentaDto ventaDto = ventaFeing.obtenerPorId(detalle.getVentaId()).getBody();
+                detalle.setVentaDto(ventaDto);
+            }
+        }
+        return licencias;
     }
 
     @Override
     public Optional<Licencia> buscar(Integer id) {
-        return licenciaRepository.findById(id);
+        Optional<Licencia> optionallicencias = licenciaRepository.findById(id);
+
+        optionallicencias.ifPresent(licencia -> {
+            ClienteDto clienteDto = clienteFeing.obtenerPorId(licencia.getClienteId()).getBody();
+            licencia.setClienteDto(clienteDto);
+        for (LicenciaDetalle detalle: licencia.getDetalles()) {
+                VentaDto ventaDto = ventaFeing.obtenerPorId(detalle.getVentaId()).getBody();
+                detalle.setVentaDto(ventaDto);
+        }
+        });
+        return optionallicencias;
     }
 
     @Override
-    public Licencia guardar(Licencia licencia) {
-        ClienteDto cliente = clienteFeing.obtenerPorId(licencia.getClienteId()).getBody();
+    public Licencia guardar(LicenciaCreateDto licenciaDato) {
+        ClienteDto cliente = clienteFeing.obtenerPorId(licenciaDato.getClienteId()).getBody();
         if (cliente == null) {
-            throw new RuntimeException("Cliente no encontrado con ID: " + cliente.getId());
+            throw new RuntimeException("Cliente no encontrado con ID: " + licenciaDato.getClienteId());
         }
-        for (LicenciaDetalle detalle : licencia.getDetalles()) {
-            VentaDto ventaDto = ventaFeing.obtenerPorId(detalle.getVentaId()).getBody();
-            if (ventaDto == null || !"COMPLETA".equals(ventaDto.getEstado())) {
-                throw new RuntimeException("Venta no disponible o no esta completada");
+        Licencia licencia = new Licencia();
+        licencia.setClienteId(cliente.getId());
+        licencia.setTipoLicencia(licenciaDato.getTipoLicencia());
+        licencia.setFechaExpiracion(licenciaDato.getFechaExpiracion());
+        licencia.setEstado(licenciaDato.getEstado());
+
+        List<LicenciaDetalle> detalles = new ArrayList<>();
+
+        for (LicenciaDetalleCreateDto detalleDto : licenciaDato.getDetalles()) {
+            VentaDto ventaDto = ventaFeing.obtenerPorId(detalleDto.getVentaId()).getBody();
+            if (ventaDto == null || !"COMPLETA".equalsIgnoreCase(ventaDto.getEstado())) {
+                throw new RuntimeException("Venta no válida o no completada, ID: "
+                        + detalleDto.getVentaId());
             }
+            LicenciaDetalle detalle = new LicenciaDetalle();
             detalle.setVentaId(ventaDto.getId());
-            detalle.setVentaDto(ventaDto);
             detalle.setCodigoLicencia(generarCodigoLicencia());
             detalle.setContrasena(generarContrasena());
-        }
 
-        licencia.setClienteId(cliente.getId());
-        licencia.setTipoLicencia(licencia.getTipoLicencia());
-        licencia.setFechaExpiracion(licencia.getFechaExpiracion());
-        licencia.setActiva(licencia.getActiva());
-        licencia.setDetalles(licencia.getDetalles());
+            detalles.add(detalle);
+        }
+        licencia.setDetalles(detalles);
         return licenciaRepository.save(licencia);
     }
-
 
     @Override
     public Licencia actualizar(Integer id, Licencia licencia) {
@@ -92,6 +120,5 @@ public class LicenciaSeriveImpl implements LicenciaService {
     public void eliminar(Integer id) {
     licenciaRepository.deleteById(id);
     }
-
 
 }

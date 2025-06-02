@@ -18,10 +18,10 @@ public class Licencia {
     private String tipoLicencia;
     private LocalDate fechaActivacion = LocalDate.now();
     private LocalDate fechaExpiracion;
-    private String activa;
+    private Boolean estado;
     @Transient
     private ClienteDto clienteDto;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "licencia_id")  // clave foránea en MatriculaDetalle
     private List<LicenciaDetalle> detalles;
 
@@ -29,14 +29,14 @@ public class Licencia {
     }
 
     public Licencia(Integer id, Integer clienteId, String tipoLicencia, LocalDate fechaActivacion,
-                    LocalDate fechaExpiracion, String activa, ClienteDto clienteDto,
+                    LocalDate fechaExpiracion, Boolean estado, ClienteDto clienteDto,
                     List<LicenciaDetalle> detalles) {
         this.id = id;
         this.clienteId = clienteId;
         this.tipoLicencia = tipoLicencia;
         this.fechaActivacion = fechaActivacion;
         this.fechaExpiracion = fechaExpiracion;
-        this.activa = activa;
+        this.estado = estado;
         this.clienteDto = clienteDto;
         this.detalles = detalles;
     }
@@ -81,12 +81,12 @@ public class Licencia {
         this.fechaExpiracion = fechaExpiracion;
     }
 
-    public String getActiva() {
-        return activa;
+    public Boolean getEstado() {
+        return estado;
     }
 
-    public void setActiva(String activa) {
-        this.activa = activa;
+    public void setEstado(Boolean estado) {
+        this.estado = estado;
     }
 
     public ClienteDto getClienteDto() {

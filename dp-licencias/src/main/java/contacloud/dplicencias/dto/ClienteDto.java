@@ -5,14 +5,17 @@ public class ClienteDto {
     private String nombre;
     private String email;
     private String rucDni;
+    private String estado;
 
     public ClienteDto() {}
 
-    public ClienteDto(Integer id, String nombre, String direccion, String rucDni) {
+    public ClienteDto(Integer id, String nombre,
+                      String direccion, String rucDni,String estado) {
         this.id = id;
         this.nombre = nombre;
         this.email = email;
         this.rucDni = rucDni;
+        this.estado = estado;
     }
 
     public Integer getId() { return id; }
@@ -25,4 +28,6 @@ public class ClienteDto {
 
     public String getRucDni() { return rucDni; }
     public void setRucDni(String rucDni) { this.rucDni = rucDni; }
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
 }

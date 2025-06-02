@@ -2,6 +2,7 @@ package contacloud.dpnotificacion.entity;
 
 
 import contacloud.dpnotificacion.dto.ClienteDto;
+import contacloud.dpnotificacion.dto.LicenciaDato;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
@@ -14,6 +15,7 @@ public class Notificacion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer notificacionId;
     private Integer clienteId;
+    private Integer licenciaId;
     private String tipo; // email, SMS, push
     private String asunto;
     @Lob
@@ -24,6 +26,8 @@ public class Notificacion {
     private String respuesta;
     @Transient
     private ClienteDto clienteDto;
+    @Transient
+    private LicenciaDato licenciaDto;
 
     public Notificacion() {
     }

@@ -5,21 +5,16 @@ import java.time.LocalDate;
 public class VentaDto {
     private int id;
     private String clienteId;
-    private String producto;
-    private Double precio;
-    private LocalDate fechaCompra;
+    private LocalDate fecha_emision;
     private String estado;
 
     public VentaDto() {
     }
 
-    public VentaDto(int id, String clienteId, String producto,
-                    Double precio, LocalDate fechaCompra, String estado) {
+    public VentaDto(int id, String clienteId, LocalDate fecha_emision, String estado) {
         this.id = id;
         this.clienteId = clienteId;
-        this.producto = producto;
-        this.precio = precio;
-        this.fechaCompra = fechaCompra;
+        this.fecha_emision = fecha_emision;
         this.estado = estado;
     }
 
@@ -39,28 +34,12 @@ public class VentaDto {
         this.clienteId = clienteId;
     }
 
-    public String getProducto() {
-        return producto;
-    }
-
-    public void setProducto(String producto) {
-        this.producto = producto;
-    }
-
-    public Double getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(Double precio) {
-        this.precio = precio;
-    }
-
     public LocalDate getFechaCompra() {
-        return fechaCompra;
+        return fecha_emision;
     }
 
     public void setFechaCompra(LocalDate fechaCompra) {
-        this.fechaCompra = fechaCompra;
+        this.fecha_emision = fechaCompra;
     }
 
     public String getEstado() {

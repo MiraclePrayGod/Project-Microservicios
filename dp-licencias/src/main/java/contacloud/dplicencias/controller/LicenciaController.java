@@ -1,6 +1,7 @@
 package contacloud.dplicencias.controller;
 
 
+import contacloud.dplicencias.dto.LicenciaCreateDto;
 import contacloud.dplicencias.entity.Licencia;
 import contacloud.dplicencias.service.LicenciaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,8 @@ public class LicenciaController {
 
     // Endpoint para crear una nueva licencia
     @PostMapping
-    public ResponseEntity<Licencia> crearLicencia(@RequestBody Licencia licencia) {
-        Licencia nuevaLicencia = licenciaService.guardar(licencia);  // Crear la nueva licencia
+    public ResponseEntity<Licencia> crearLicencia(@RequestBody LicenciaCreateDto licenciaDto) {
+        Licencia nuevaLicencia = licenciaService.guardar(licenciaDto);  // Crear la nueva licencia
         return ResponseEntity.status(201).body(nuevaLicencia);  // Retorna la licencia creada con estado 201
     }
 

@@ -1,5 +1,6 @@
 package contacloud.dplicencias.service;
 
+import contacloud.dplicencias.dto.LicenciaCreateDto;
 import contacloud.dplicencias.entity.Licencia;
 
 import java.util.List;
@@ -9,7 +10,7 @@ public interface LicenciaService {
 
     List<Licencia> listar();
     Optional<Licencia> buscar(Integer id);
-    Licencia guardar(Licencia licencia);
+    Licencia guardar(LicenciaCreateDto licenciaDato);
     Licencia actualizar(Integer id,Licencia licencia);
     void eliminar(Integer id);
 
