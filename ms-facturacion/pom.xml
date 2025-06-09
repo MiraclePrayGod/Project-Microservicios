@@ -16,7 +16,7 @@
     <artifactId>ms-facturacion</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>ms-facturacion</name>
-    <description>Microservicio de matricula</description>
+    <description>Microservicio de Facturacion</description>
 
 <properties>
 <java.version>17</java.version> <!-- o la versión que uses -->

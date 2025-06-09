@@ -56,7 +56,6 @@ public class VentaServiceImpl implements VentaService {
 
         BigDecimal totalFactura = BigDecimal.ZERO;
 
-        // Validar stock pero NO reducirlo aquí
         for (DetalleVentaDTO detalleDTO : dto.getDetalles()) {
             try {
                 ProductoDTO producto = productoClient.obtenerProductoPorId(detalleDTO.getProductoId());
@@ -69,14 +68,15 @@ public class VentaServiceImpl implements VentaService {
                     throw new IllegalArgumentException("Stock insuficiente para el producto ID " + detalleDTO.getProductoId());
                 }
 
-                BigDecimal subtotal = detalleDTO.getPrecioUnitario().multiply(BigDecimal.valueOf(detalleDTO.getCantidad()));
+                BigDecimal precioUnitario = producto.getPrecioUnitario(); // ← tomamos el precio desde el microservicio de productos
+                BigDecimal subtotal = precioUnitario.multiply(BigDecimal.valueOf(detalleDTO.getCantidad()));
                 totalFactura = totalFactura.add(subtotal);
 
                 DetalleVenta detalle = new DetalleVenta();
                 detalle.setVenta(venta);
                 detalle.setProductoId(detalleDTO.getProductoId());
                 detalle.setCantidad(detalleDTO.getCantidad());
-                detalle.setPrecioUnitario(detalleDTO.getPrecioUnitario());
+                detalle.setPrecioUnitario(precioUnitario); // ← usamos el precio correcto
                 detalle.setSubtotal(subtotal);
                 detalleVentaRepository.save(detalle);
 
@@ -93,8 +93,11 @@ public class VentaServiceImpl implements VentaService {
         dto.setTotal(totalFactura);
         dto.setEstado(venta.getEstado());
 
+
         return dto;
+
     }
+
 
     @Override
     public VentaDTO obtenerVenta(Long id) {
@@ -115,12 +118,25 @@ public class VentaServiceImpl implements VentaService {
             detalle.setProductoId(d.getProductoId());
             detalle.setCantidad(d.getCantidad());
             detalle.setPrecioUnitario(d.getPrecioUnitario());
+
+            try {
+                ProductoDTO producto = productoClient.obtenerProductoPorId(d.getProductoId());
+                detalle.setNombreProducto(producto.getNombre());
+                detalle.setCategoria(producto.getCategoria());
+                detalle.setUnidadMedida(producto.getUnidadMedida());
+            } catch (Exception e) {
+                detalle.setNombreProducto("Desconocido");
+                detalle.setCategoria("Desconocida");
+                detalle.setUnidadMedida("N/D");
+            }
+
             return detalle;
         }).collect(Collectors.toList());
 
         dto.setDetalles(detallesDTO);
         return dto;
     }
+
 
     @Override
     public List<VentaDTO> listarVentas() {
@@ -139,52 +155,71 @@ public class VentaServiceImpl implements VentaService {
     @Override
     @Transactional
     public PagoDTO registrarPago(PagoDTO dto) {
-        Venta venta = ventaRepository.findById(dto.getFacturaId())
-                .orElseThrow(() -> new IllegalArgumentException("Venta con ID " + dto.getFacturaId() + " no existe."));
+        // 🟠 Buscar última venta pendiente del cliente
+        Venta venta = ventaRepository
+                .findTopByClienteIdAndEstadoOrderByFechaEmision(dto.getClienteId(), "PENDIENTE")
+                .orElseThrow(() -> new IllegalArgumentException("No hay ventas pendientes para el cliente."));
 
+        // 🟡 Verificar si ya existen pagos previos
+        List<Pago> pagosAnteriores = pagoRepository.findByVentaId(venta.getId());
+        boolean esPrimerPago = pagosAnteriores.isEmpty();
+
+        // 🛑 Si ya está pagada, no permitir más pagos
         if ("PAGADO".equalsIgnoreCase(venta.getEstado())) {
             throw new IllegalArgumentException("La venta ya fue pagada.");
         }
 
-        // Obtener detalles para validar y descontar stock
-        List<DetalleVenta> detalles = detalleVentaRepository.findByVentaId(venta.getId());
+        // ✅ Verificación de stock solo en el primer pago
+        if (esPrimerPago) {
+            List<DetalleVenta> detalles = detalleVentaRepository.findByVentaId(venta.getId());
 
-        // Validar stock para cada producto
-        for (DetalleVenta detalle : detalles) {
-            ProductoDTO producto = productoClient.obtenerProductoPorId(detalle.getProductoId());
+            for (DetalleVenta detalle : detalles) {
+                ProductoDTO producto = productoClient.obtenerProductoPorId(detalle.getProductoId());
 
-            if (producto == null) {
-                throw new IllegalArgumentException("Producto con ID " + detalle.getProductoId() + " no encontrado.");
+                if (producto == null) {
+                    throw new IllegalArgumentException("Producto ID " + detalle.getProductoId() + " no encontrado.");
+                }
+
+                if (producto.getStock() < detalle.getCantidad()) {
+                    throw new IllegalArgumentException("Stock insuficiente para producto ID " + detalle.getProductoId());
+                }
             }
 
-            if (producto.getStock() < detalle.getCantidad()) {
-                throw new IllegalArgumentException("Stock insuficiente para producto ID " + detalle.getProductoId());
+            // 🔻 Reducir stock solo si es el primer pago
+            for (DetalleVenta detalle : detalles) {
+                productoClient.reducirStock(detalle.getProductoId(), detalle.getCantidad());
             }
         }
 
-        // Reducir stock de cada producto
-        for (DetalleVenta detalle : detalles) {
-            productoClient.reducirStock(detalle.getProductoId(), detalle.getCantidad());
-        }
-
-        // Registrar pago
+        // 💰 Registrar el pago
         Pago pago = new Pago();
         pago.setVenta(venta);
         pago.setFechaPago(LocalDateTime.now());
         pago.setMetodoPago(dto.getMetodoPago());
         pago.setMonto(dto.getMonto());
         pago.setReferencia(dto.getReferencia());
-
         pagoRepository.save(pago);
 
-        venta.setEstado("PAGADO");
-        ventaRepository.save(venta);
+        // ➕ Calcular total pagado hasta ahora
+        BigDecimal totalPagado = pagosAnteriores.stream()
+                .map(Pago::getMonto)
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .add(dto.getMonto());
 
+        // 🔁 Si el total pagado cubre o supera el total de la venta, actualizar estado
+        if (totalPagado.compareTo(venta.getTotal()) >= 0) {
+            venta.setEstado("PAGADO");
+            ventaRepository.save(venta);
+        }
+
+        // 🔁 Retornar DTO actualizado
         dto.setId(pago.getId());
         dto.setFechaPago(pago.getFechaPago());
 
         return dto;
     }
+
+
 
 
 
@@ -204,6 +239,7 @@ public class VentaServiceImpl implements VentaService {
         dto.setMonto(pago.getMonto());
         dto.setMetodoPago(pago.getMetodoPago());
         dto.setReferencia(pago.getReferencia());
+        dto.setClienteId(pago.getVenta().getClienteId());
         return dto;
     }
 
@@ -218,6 +254,18 @@ public class VentaServiceImpl implements VentaService {
             detalle.setProductoId(d.getProductoId());
             detalle.setCantidad(d.getCantidad());
             detalle.setPrecioUnitario(d.getPrecioUnitario());
+
+            try {
+                ProductoDTO producto = productoClient.obtenerProductoPorId(d.getProductoId());
+                detalle.setNombreProducto(producto.getNombre());
+                detalle.setCategoria(producto.getCategoria());
+                detalle.setUnidadMedida(producto.getUnidadMedida());
+            } catch (Exception e) {
+                detalle.setNombreProducto("Desconocido");
+                detalle.setCategoria("Desconocida");
+                detalle.setUnidadMedida("N/D");
+            }
+
             return detalle;
         }).collect(Collectors.toList());
 
@@ -229,5 +277,12 @@ public class VentaServiceImpl implements VentaService {
                 venta.getEstado(),
                 detallesDTO
         );
+    }
+
+    @Override
+    public List<VentaDTO> listarVentasPorEstado(String estado) {
+        return ventaRepository.findByEstado(estado).stream()
+                .map(this::convertirVentaADTO)
+                .collect(Collectors.toList());
     }
 }

@@ -1,8 +1,7 @@
 package com.contacloud.pdventa.controller;
 
-import com.contacloud.pdventa.dto.VentaDTO;
 import com.contacloud.pdventa.dto.PagoDTO;
-import com.contacloud.pdventa.entity.Pago;
+import com.contacloud.pdventa.dto.VentaDTO;
 import com.contacloud.pdventa.service.VentaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -52,5 +51,10 @@ public class VentaController {
         return ResponseEntity.ok(pagos);
     }
 
+    @GetMapping("/pagadas")
+    public ResponseEntity<List<VentaDTO>> listarVentasPagadas() {
+        List<VentaDTO> ventasPagadas = ventaService.listarVentasPorEstado("PAGADO");
+        return ResponseEntity.ok(ventasPagadas);
+    }
 
 }

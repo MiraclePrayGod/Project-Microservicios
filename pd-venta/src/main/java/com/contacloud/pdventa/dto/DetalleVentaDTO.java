@@ -9,5 +9,10 @@ import java.math.BigDecimal;
 public class DetalleVentaDTO {
     private Long productoId;
     private Integer cantidad;
-    private BigDecimal precioUnitario; // Puede venir del servicio de productos
+    private BigDecimal precioUnitario;
+
+    // Campos adicionales del producto
+    private String nombreProducto;
+    private String categoria;
+    private String unidadMedida;
 }
