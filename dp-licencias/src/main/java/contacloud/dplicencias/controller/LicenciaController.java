@@ -52,6 +52,21 @@ public class LicenciaController {
         licenciaService.eliminar(id);  // Eliminar la licencia
         return ResponseEntity.noContent().build();  // Retorna un código de estado 204 (sin contenido)
     }
+    @PostMapping("/enviar/{clienteId}")
+    public ResponseEntity<String> sendEmail( @PathVariable Integer clienteId) {
+        try {
+
+            // Llamada al servicio que envía el correo
+            String token = licenciaService.sendEmail( clienteId);
+
+            // Respuesta exitosa con código 200
+            return ResponseEntity.status(200).body("Correo enviado con éxito. Token generado: " + token);
+
+        } catch (Exception e) {
+            // Respuesta con código 500 en caso de error
+            return ResponseEntity.status(500).body("Error al enviar el correo: " + e.getMessage());
+        }
+    }
 
 }
 

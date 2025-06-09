@@ -24,6 +24,8 @@ public class Cliente {
     public Cliente() {
     }
 
+
+
     public Cliente(Integer id, String nombre, String rucDni, String direccion, String email, String telefono, LocalDateTime fecha, String estado) {
         this.id = id;
         this.nombre = nombre;

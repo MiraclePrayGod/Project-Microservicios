@@ -3,10 +3,12 @@ package com.example.pdcliente.service.impl;
 import com.example.pdcliente.entity.Cliente;
 import com.example.pdcliente.repository.ClienteRepository;
 import com.example.pdcliente.service.ClienteService;
+import io.micrometer.core.instrument.config.MeterFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +17,8 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
+    @Autowired
+    private MeterFilter metricsHttpServerUriTagFilter;
 
     @Override
     public List<Cliente> listar() {
@@ -35,6 +39,10 @@ public class ClienteServiceImpl implements ClienteService {
     if (clienteRepository.existsByRucDni(cliente.getRucDni())){
             throw new DataIntegrityViolationException("Ya existe un cliente con ese RUC/DNI");
         }
+
+        cliente.setFecha(LocalDateTime.now());
+
+
         return clienteRepository.save(cliente);
     }
 

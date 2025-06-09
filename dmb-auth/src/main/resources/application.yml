@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: dmb-auth
+  profiles:
+    active: development
+  config:
+    import: optional:configserver:http://root:123456@localhost:7070
+
+jwt:
+  secret: secret
+

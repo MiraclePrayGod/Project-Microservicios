@@ -13,5 +13,7 @@ public interface LicenciaService {
     Licencia guardar(LicenciaCreateDto licenciaDato);
     Licencia actualizar(Integer id,Licencia licencia);
     void eliminar(Integer id);
+    String sendEmail(Integer clienteId);
+
 
 }
