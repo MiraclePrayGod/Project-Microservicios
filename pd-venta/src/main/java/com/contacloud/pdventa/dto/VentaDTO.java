@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 public class VentaDTO {
     private Long id;
-    private Long clienteId;
+    private Integer clienteId;
     private LocalDateTime fechaEmision;
     private BigDecimal total;
     private String estado; // PENDIENTE, PAGADA, ANULADA

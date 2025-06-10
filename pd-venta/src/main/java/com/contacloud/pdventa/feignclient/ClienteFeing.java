@@ -12,4 +12,5 @@ public interface ClienteFeing {
 
     @GetMapping("/{id}")
     ClienteDTO obtenerClientePorId(@PathVariable("id") Long id);
+
 }

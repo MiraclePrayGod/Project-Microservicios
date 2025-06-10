@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class ClienteDTO {
-    private Long id;
+    private Integer id;
     private String nombre;
     private String rucDni;
     private String direccion;

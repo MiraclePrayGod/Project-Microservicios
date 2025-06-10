@@ -2,9 +2,10 @@ package com.contacloud.pdventa.entity;
 
 
 import com.contacloud.pdventa.dto.ClienteDTO;
-import com.contacloud.pdventa.dto.ProductoDTO;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -20,7 +21,7 @@ public class Venta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long clienteId;
+    private Integer clienteId;
     private LocalDateTime fechaEmision;
     private BigDecimal total;
     private String estado;
