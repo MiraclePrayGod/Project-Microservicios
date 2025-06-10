@@ -146,7 +146,7 @@ public class VentaServiceImpl implements VentaService {
     }
 
     @Override
-    public List<VentaDTO> listarVentasPorCliente(Long clienteId) {
+    public List<VentaDTO> listarVentasPorCliente(Integer clienteId) {
         return ventaRepository.findByClienteId(clienteId).stream()
                 .map(this::convertirVentaADTO)
                 .collect(Collectors.toList());

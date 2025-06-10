@@ -13,5 +13,5 @@ public class PagoDTO {
     private BigDecimal monto;
     private String metodoPago; // Efectivo, Transferencia, etc.
     private String referencia;
-    private Long clienteId;
+    private Integer clienteId;
 }

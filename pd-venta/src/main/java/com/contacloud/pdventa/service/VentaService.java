@@ -10,7 +10,7 @@ public interface VentaService {
     VentaDTO crearVenta(VentaDTO ventaDTO);
     VentaDTO obtenerVenta(Long id);
     List<VentaDTO> listarVentas();
-    List<VentaDTO> listarVentasPorCliente(Long clienteId);
+    List<VentaDTO> listarVentasPorCliente(Integer clienteId);
     PagoDTO registrarPago(PagoDTO dto);
     List<PagoDTO> obtenerTodosLosPagosDTO();
     List<VentaDTO> listarVentasPorEstado(String estado);

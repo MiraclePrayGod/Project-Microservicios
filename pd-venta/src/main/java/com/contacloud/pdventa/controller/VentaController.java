@@ -35,7 +35,7 @@ public class VentaController {
     }
 
     @GetMapping("/cliente/{clienteId}")
-    public ResponseEntity<List<VentaDTO>> listarVentasPorCliente(@PathVariable Long clienteId) {
+    public ResponseEntity<List<VentaDTO>> listarVentasPorCliente(@PathVariable Integer clienteId) {
         List<VentaDTO> facturas = ventaService.listarVentasPorCliente(clienteId);
         return ResponseEntity.ok(facturas);
     }

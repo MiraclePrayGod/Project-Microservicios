@@ -13,7 +13,7 @@ public class ClienteClientFallbackFactory implements FallbackFactory<ClienteFein
     public ClienteFeing create(Throwable cause) {
         return new ClienteFeing() {
             @Override
-            public ClienteDTO obtenerClientePorId(Long id) {
+            public ClienteDTO obtenerClientePorId(Integer id) {
                 throw new RuntimeException("No se pudo contactar con el servicio de clientes. Detalle: " + cause.getMessage());
             }
         };
