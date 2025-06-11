@@ -6,7 +6,7 @@ import com.contacloud.pdventa.feignclient.fallback.ProductoClientFallbackFactory
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name = "pd-inventario", path = "/productos", fallbackFactory = ProductoClientFallbackFactory.class)
+@FeignClient(name = "dp-inventario", path = "/productos", fallbackFactory = ProductoClientFallbackFactory.class)
 public interface ProductoFeing {
 
     @GetMapping("/{id}")

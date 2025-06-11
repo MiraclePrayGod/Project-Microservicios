@@ -14,8 +14,10 @@ import com.contacloud.pdventa.repository.DetalleVentaRepository;
 import com.contacloud.pdventa.repository.VentaRepository;
 import com.contacloud.pdventa.repository.PagoRepository;
 import com.contacloud.pdventa.service.VentaService;
+import feign.FeignException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -37,14 +39,15 @@ public class VentaServiceImpl implements VentaService {
     @Override
     @Transactional
     public VentaDTO crearVenta(VentaDTO dto) {
-        ClienteDTO cliente;
+        ResponseEntity<ClienteDTO> cliente;
         try {
             cliente = clienteClient.obtenerClientePorId(dto.getClienteId());
-        } catch (Exception e) {
-            throw new RuntimeException("No se pudo obtener el cliente (ID: " + dto.getClienteId() + "): " + e.getMessage());
+        } catch (FeignException.NotFound e) {
+            throw new IllegalArgumentException("Cliente con ID " + dto.getClienteId() + " no existe.");
+        }catch (FeignException e) {
+            throw new RuntimeException("Error al llamar al servicio de cliente: " + e.getMessage());
         }
-
-        if (cliente == null) {
+        if (!cliente.getStatusCode().is2xxSuccessful() || cliente.getBody() == null) {
             throw new IllegalArgumentException("Cliente con ID " + dto.getClienteId() + " no existe.");
         }
 

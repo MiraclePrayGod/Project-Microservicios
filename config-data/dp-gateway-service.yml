@@ -32,7 +32,7 @@ spring:
           uri: lb://pd-venta
           predicates:
             - Path=/ventas/**
-        - id: ms-facturacion
-          uri: lb://ms-facturacion
+        - id: dp-facturation
+          uri: lb://dp-facturation
           predicates:
             - Path=/facturas/**
