@@ -1,16 +1,13 @@
 package com.contacloud.pdinventario.controller;
 
 import com.contacloud.pdinventario.model.Producto;
-import com.contacloud.pdinventario.repository.ProductoRepository;
 import com.contacloud.pdinventario.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/productos")
@@ -37,10 +34,7 @@ public class ProductoController {
     }
 
     @PutMapping("/productos/{id}/reducir-stock")
-    public ResponseEntity<Void> reducirStock(
-            @PathVariable Long id,
-            @RequestParam int cantidad
-    ) {
+    public ResponseEntity<Void> reducirStock(@PathVariable Long id,@RequestParam Integer cantidad) {
         productoService.reducirStock(id, cantidad);
         return ResponseEntity.ok().build();
     }
@@ -54,8 +48,6 @@ public class ProductoController {
         productoService.actualizarStock(id, cantidad);
         return ResponseEntity.ok("Stock actualizado correctamente.");
     }
-
-
 
 
     @DeleteMapping("/{id}")
