@@ -16,8 +16,8 @@ spring:
         locator:
           enable: true
       routes:
-        - id: pd-inventario
-          uri: lb://pd-inventario
+        - id: dp-inventario
+          uri: lb://dp-inventario
           predicates:
             - Path=/movimientos/**
             - Path=/productos/**
