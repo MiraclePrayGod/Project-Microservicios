@@ -1,7 +1,7 @@
 package com.contacloud.dpinventario.controller;
 
-import com.contacloud.pdinventario.model.Producto;
-import com.contacloud.pdinventario.service.ProductoService;
+import com.contacloud.dpinventario.model.Producto;
+import com.contacloud.dpinventario.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

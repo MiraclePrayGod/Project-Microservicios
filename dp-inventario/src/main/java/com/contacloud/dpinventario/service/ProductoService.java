@@ -1,7 +1,7 @@
 package com.contacloud.dpinventario.service;
 
-import com.contacloud.pdinventario.model.Producto;
-import com.contacloud.pdinventario.repository.ProductoRepository;
+import com.contacloud.dpinventario.model.Producto;
+import com.contacloud.dpinventario.repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
