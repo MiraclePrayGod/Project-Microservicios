@@ -7,15 +7,7 @@ eureka:
       #defaultZone: http://localhost:8090/eureka
       defaultZone: ${EUREKA_URI:http://localhost:8090/eureka}
   instance:
-    #hostname: localhost
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
-
-    # eureka:
-    #client:
-    # serviceUrl:
-    #  defaultZone: http://localhost:8090/eureka
-    # instance:
-  #  hostname: localhost
 
 spring:
   cloud:
@@ -24,24 +16,24 @@ spring:
         locator:
           enable: true
       routes:
-        - id: dp-cliente  # El nombre de la ruta para enrutar las solicitudes
-          uri: lb://pd-cliente  # Enviar las solicitudes a dmb-curso a través de Eureka (Load Balancer)
+        - id: dp-cliente
+          uri: lb://pd-cliente
           predicates:
             - Path=/clientes/**
-        - id: dp-licencias  # El nombre de la ruta para enrutar las solicitudes
-          uri: lb://dp-licencias   # Enviar las solicitudes a dmb-curso a través de Eureka (Load Balancer)
+        - id: dp-licencias
+          uri: lb://dp-licencias
           predicates:
             - Path=/licencias/**
-        - id: pd-venta  # El nombre de la ruta para enrutar las solicitudes
-          uri: lb://pd-venta  # Enviar las solicitudes a dmb-curso a través de Eureka (Load Balancer)
+        - id: pd-venta
+          uri: lb://pd-venta
           predicates:
             - Path=/ventas/**
-        - id: pd-inventario # El nombre de la ruta para enrutar las solicitudes
-          uri: lb://pd-inventario # Enviar las solicitudes a dmb-curso a través de Eureka (Load Balancer)
+        - id: pd-inventario
+          uri: lb://pd-inventario
           predicates:
             - Path=/movimientos/**
             - Path=/productos/**
-        - id: ms-facturacion  # El nombre de la ruta para enrutar las solicitudes
-          uri: lb://ms-facturacion  # Enviar las solicitudes a dmb-curso a través de Eureka (Load Balancer)
+        - id: ms-facturacion
+          uri: lb://ms-facturacion
           predicates:
             - Path=/facturas/**
