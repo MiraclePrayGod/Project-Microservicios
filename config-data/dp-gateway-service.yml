@@ -19,8 +19,7 @@ spring:
         - id: dp-inventario
           uri: lb://dp-inventario
           predicates:
-            - Path=/movimientos/**
-            - Path=/productos/**
+            - Path=/movimientos/**, /productos/**
         - id: dp-cliente
           uri: lb://pd-cliente
           predicates:
