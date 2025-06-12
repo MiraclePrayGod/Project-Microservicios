@@ -8,7 +8,6 @@ import contacloud.dplicencias.feign.ProductoFeing;
 import contacloud.dplicencias.feign.VentaFeing;
 import contacloud.dplicencias.repository.LicenciaRepository;
 import contacloud.dplicencias.service.LicenciaService;
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,13 +38,11 @@ public class LicenciaSeriveImpl implements LicenciaService {
     @Autowired
     private ProductoFeing productoFeing;
 
-
     @Autowired
     private SpringTemplateEngine templateEngine;
 
     @Autowired
     private JavaMailSenderImpl mailSender;
-
 
     private String generarCodigoLicencia(String nombreCliente) {
         String nombreBase = nombreCliente.length() >= 3 ? nombreCliente.substring(0, 3).toUpperCase() : nombreCliente.toUpperCase();
@@ -64,9 +61,8 @@ public class LicenciaSeriveImpl implements LicenciaService {
         return contrasena.toString();
     }
 
-    // Método listar con CircuitBreaker
+    // Método listar sin CircuitBreaker
     @Override
-    @CircuitBreaker(name = "licenciaListarCB", fallbackMethod = "fallBackMethodListar")
     public List<Licencia> listar() {
         List<Licencia> licencias = licenciaRepository.findAll();
         for (Licencia licencia : licencias) {
@@ -74,20 +70,15 @@ public class LicenciaSeriveImpl implements LicenciaService {
             licencia.setClienteDto(clienteDto);
 
             for (LicenciaDetalle detalle: licencia.getDetalles()) {
-                ProductoDto productoDto = productoFeing.obtenerPorId(detalle.getProductoId()).getBody();
                 VentaDto ventaDto = ventaFeing.obtenerPorId(detalle.getVentaId()).getBody();
                 detalle.setVentaDto(ventaDto);
-                detalle.setProductoDato(productoDto);
             }
         }
         return licencias;
     }
 
-
-
-    // Método buscar con CircuitBreaker
+    // Método buscar sin CircuitBreaker
     @Override
-    @CircuitBreaker(name = "licenciaBuscarCB", fallbackMethod = "fallBackMethodBuscar")
     public Optional<Licencia> buscar(Integer id) {
         Optional<Licencia> optionalLicencia = licenciaRepository.findById(id);
 
@@ -95,28 +86,16 @@ public class LicenciaSeriveImpl implements LicenciaService {
             ClienteDto clienteDto = clienteFeing.obtenerPorId(licencia.getClienteId()).getBody();
             licencia.setClienteDto(clienteDto);
             for (LicenciaDetalle detalle: licencia.getDetalles()) {
-                ProductoDto productoDto = productoFeing.obtenerPorId(detalle.getProductoId()).getBody();
                 VentaDto ventaDto = ventaFeing.obtenerPorId(detalle.getVentaId()).getBody();
                 detalle.setVentaDto(ventaDto);
-                detalle.setProductoDato(productoDto);
             }
         });
 
         return optionalLicencia;
     }
 
-    // Método fallback para buscar
-    public Optional<Licencia> fallBackMethodBuscar(Integer id, Throwable t) {
-        System.err.println("🚨 Fallback buscarLicencia activado para id " + id + ": " + t.getMessage());
-        Licencia fallback = new Licencia();
-        fallback.setId(-1);
-        fallback.setClienteDto(new ClienteDto());
-        return Optional.of(fallback);
-    }
-
-    // Método guardar con CircuitBreaker
+    // Método guardar sin CircuitBreaker
     @Override
-    @CircuitBreaker(name = "licenciaGuardarCB", fallbackMethod = "fallBackMethodGuardar")
     public Licencia guardar(LicenciaCreateDto licenciaDato) {
         ClienteDto cliente = clienteFeing.obtenerPorId(licenciaDato.getClienteId()).getBody();
         if (cliente == null) {
@@ -145,14 +124,6 @@ public class LicenciaSeriveImpl implements LicenciaService {
         }
         licencia.setDetalles(detalles);
         return licenciaRepository.save(licencia);
-    }
-
-    // Método fallback para guardar
-    public Licencia fallBackMethodGuardar(LicenciaCreateDto licenciaDato, Throwable t) {
-        System.err.println("🚨 Fallback guardarLicencia activado: " + t.getMessage());
-        Licencia fallback = new Licencia();
-        fallback.setId(-1);
-        return fallback;
     }
 
     @Override
