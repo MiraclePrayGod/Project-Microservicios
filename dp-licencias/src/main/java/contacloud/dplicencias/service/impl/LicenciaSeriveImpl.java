@@ -1,12 +1,10 @@
 package contacloud.dplicencias.service.impl;
 
-import contacloud.dplicencias.dto.ClienteDto;
-import contacloud.dplicencias.dto.LicenciaCreateDto;
-import contacloud.dplicencias.dto.LicenciaDetalleCreateDto;
-import contacloud.dplicencias.dto.VentaDto;
+import contacloud.dplicencias.dto.*;
 import contacloud.dplicencias.entity.Licencia;
 import contacloud.dplicencias.entity.LicenciaDetalle;
 import contacloud.dplicencias.feign.ClienteFeing;
+import contacloud.dplicencias.feign.ProductoFeing;
 import contacloud.dplicencias.feign.VentaFeing;
 import contacloud.dplicencias.repository.LicenciaRepository;
 import contacloud.dplicencias.service.LicenciaService;
@@ -37,6 +35,10 @@ public class LicenciaSeriveImpl implements LicenciaService {
 
     @Autowired
     private VentaFeing ventaFeing;
+
+    @Autowired
+    private ProductoFeing productoFeing;
+
 
     @Autowired
     private SpringTemplateEngine templateEngine;
@@ -72,8 +74,10 @@ public class LicenciaSeriveImpl implements LicenciaService {
             licencia.setClienteDto(clienteDto);
 
             for (LicenciaDetalle detalle: licencia.getDetalles()) {
+                ProductoDto productoDto = productoFeing.obtenerPorId(detalle.getProductoId()).getBody();
                 VentaDto ventaDto = ventaFeing.obtenerPorId(detalle.getVentaId()).getBody();
                 detalle.setVentaDto(ventaDto);
+                detalle.setProductoDato(productoDto);
             }
         }
         return licencias;
@@ -101,8 +105,10 @@ public class LicenciaSeriveImpl implements LicenciaService {
             ClienteDto clienteDto = clienteFeing.obtenerPorId(licencia.getClienteId()).getBody();
             licencia.setClienteDto(clienteDto);
             for (LicenciaDetalle detalle: licencia.getDetalles()) {
+                ProductoDto productoDto = productoFeing.obtenerPorId(detalle.getProductoId()).getBody();
                 VentaDto ventaDto = ventaFeing.obtenerPorId(detalle.getVentaId()).getBody();
                 detalle.setVentaDto(ventaDto);
+                detalle.setProductoDato(productoDto);
             }
         });
 

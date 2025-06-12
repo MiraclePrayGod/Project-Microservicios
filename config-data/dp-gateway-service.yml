@@ -4,7 +4,6 @@ server:
 eureka:
   client:
     serviceUrl:
-      #defaultZone: http://localhost:8090/eureka
       defaultZone: ${EUREKA_URI:http://localhost:8090/eureka}
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
@@ -30,19 +29,29 @@ spring:
           uri: lb://dp-inventario
           predicates:
             - Path=/movimientos/**, /productos/**
+          filters:
+
         - id: dp-cliente
           uri: lb://pd-cliente
           predicates:
             - Path=/clientes/**
+          filters:
+            - name: AuthFilter
+
         - id: dp-licencias
           uri: lb://dp-licencias
           predicates:
             - Path=/licencias/**
+          filters:
+
         - id: pd-venta
           uri: lb://pd-venta
           predicates:
             - Path=/ventas/**
+          filters:
+
         - id: dp-facturation
           uri: lb://dp-facturation
           predicates:
             - Path=/facturas/**
+          filters:

@@ -3,7 +3,6 @@ package contacloud.dplicencias.dto;
 public class ProductoDto {
     private String nombre;
 
-
     public ProductoDto() {
     }
 

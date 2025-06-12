@@ -14,6 +14,7 @@ public class LicenciaDetalle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer detalleId;
     private Integer ventaId;
+    private Integer productoId;
     private String codigoLicencia;  // Código único de la licencia
     private String contrasena;
     @Transient
@@ -25,7 +26,7 @@ public class LicenciaDetalle {
     }
 
     public LicenciaDetalle(Integer detalleId, Integer
-            ventadId,String codigoLicencia,
+            ventadId, Integer ventaId, String codigoLicencia,
                            String contrasena,
                            VentaDto ventaDto,
                            ProductoDto productoDto) {
@@ -83,6 +84,13 @@ public class LicenciaDetalle {
     public void setProductoDato(ProductoDto productoDato) {
         this.productoDto = productoDato;
     }
+
+    public Integer getProductoId( ) {
+return productoId;    }
+    public void setProductoId( Integer productoId) {
+        this.productoId = productoId;
+    }
+
 
 
 
