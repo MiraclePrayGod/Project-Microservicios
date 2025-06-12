@@ -1,6 +1,5 @@
 package contacloud.dplicencias.feign;
 
-import contacloud.dplicencias.dto.ClienteDto;
 import contacloud.dplicencias.dto.ProductoDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +14,6 @@ public interface ProductoFeing {
         ResponseEntity<ProductoDto> obtenerPorId(@PathVariable Integer id);
 
         @PutMapping("/{id}")
-        ResponseEntity<ProductoDto> actualizarCliente(@PathVariable Integer id, @RequestBody ClienteDto cursoDto);
+        ResponseEntity<ProductoDto> actualizarCliente(@PathVariable Integer id, @RequestBody ProductoDto productoDto);
 
 }
