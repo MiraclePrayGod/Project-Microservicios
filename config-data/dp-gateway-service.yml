@@ -36,7 +36,6 @@ spring:
           predicates:
             - Path=/clientes/**
           filters:
-            - name: AuthFilter
 
         - id: dp-licencias
           uri: lb://dp-licencias
