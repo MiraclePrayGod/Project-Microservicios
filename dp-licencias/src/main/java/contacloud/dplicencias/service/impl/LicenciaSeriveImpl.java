@@ -83,17 +83,7 @@ public class LicenciaSeriveImpl implements LicenciaService {
         return licencias;
     }
 
-    // Método fallback para listar
-    public List<Licencia> fallBackMethodListar(Throwable t) {
-        System.err.println("🚨 Fallback listarLicencias activado: " + t.getMessage());
-        Licencia fallback = new Licencia();
-        fallback.setId(-1);
-        fallback.setClienteDto(new ClienteDto());
 
-        List<Licencia> fallbackList = new ArrayList<>();
-        fallbackList.add(fallback);
-        return fallbackList;
-    }
 
     // Método buscar con CircuitBreaker
     @Override
