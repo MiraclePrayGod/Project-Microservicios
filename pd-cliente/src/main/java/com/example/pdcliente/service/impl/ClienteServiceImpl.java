@@ -39,9 +39,12 @@ public class ClienteServiceImpl implements ClienteService {
     if (clienteRepository.existsByRucDni(cliente.getRucDni())){
             throw new DataIntegrityViolationException("Ya existe un cliente con ese RUC/DNI");
         }
-
+        cliente.setNombre(cliente.getNombre());
+        cliente.setDireccion(cliente.getDireccion());
+        cliente.setEmail(cliente.getEmail());
+        cliente.setTelefono(cliente.getTelefono());
         cliente.setFecha(LocalDateTime.now());
-
+        cliente.setEstado(cliente.getEstado());
 
         return clienteRepository.save(cliente);
     }
