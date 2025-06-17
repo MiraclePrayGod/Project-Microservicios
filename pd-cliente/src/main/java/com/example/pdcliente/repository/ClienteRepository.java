@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
-    boolean existsByRucDni(String RucDni);
+
+    boolean existsByRucDni(String rucDni);
 
 }
