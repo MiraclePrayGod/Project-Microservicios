@@ -50,12 +50,6 @@ spring:
             - Path=/ventas/**
           filters:
 
-        - id: dp-facturation
-          uri: lb://dp-facturation
-          predicates:
-            - Path=/facturas/**
-          filters:
-
         - id: auth-service
           uri: lb://auth-service
           predicates:
