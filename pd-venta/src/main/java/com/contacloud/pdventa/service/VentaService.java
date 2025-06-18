@@ -15,4 +15,5 @@ public interface VentaService {
     List<PagoDTO> obtenerTodosLosPagosDTO();
     List<VentaDTO> listarVentasPorEstado(String estado);
 
+
 }

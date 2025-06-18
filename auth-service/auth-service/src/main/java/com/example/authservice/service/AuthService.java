@@ -59,7 +59,8 @@ public class AuthService {
 //        return new AuthResponse(jwtUtil.generateToken(user.getUsername(), user.getRol()));
         return new AuthResponse(
                 jwtUtil.generateToken(user.getUsername(), user.getRol()),
-                user.getRol()
+                user.getRol(),
+                user.getEmail()
         );
 
     }
@@ -74,8 +75,8 @@ public class AuthService {
 
         return new AuthResponse(
                 jwtUtil.generateToken(user.getUsername(), user.getRol()),
-                user.getRol()
-        );
+                user.getRol(),
+                user.getEmail());
 
     }
 }

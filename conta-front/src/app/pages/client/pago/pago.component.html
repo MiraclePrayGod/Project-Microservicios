@@ -1,0 +1,27 @@
+<h2>Registrar Pago</h2>
+
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <div>
+    <label>Método de Pago:</label>
+    <select formControlName="metodoPago">
+      <option value="">Seleccionar...</option>
+      <option value="EFECTIVO">Efectivo</option>
+      <option value="TRANSFERENCIA">Transferencia</option>
+      <option value="TARJETA">Tarjeta</option>
+    </select>
+  </div>
+
+  <div>
+    <label>Monto:</label>
+    <input type="number" formControlName="monto" />
+  </div>
+
+  <div>
+    <label>Referencia:</label>
+    <input type="text" formControlName="referencia" />
+  </div>
+
+  <button type="submit" [disabled]="form.invalid">Registrar Pago</button>
+</form>
+
+<p *ngIf="mensaje">{{ mensaje }}</p>

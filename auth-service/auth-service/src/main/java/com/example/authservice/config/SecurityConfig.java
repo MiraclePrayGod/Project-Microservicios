@@ -31,9 +31,10 @@ public class SecurityConfig {
         http.csrf().disable()
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/productos/**").hasRole("ADMINISTRADOR")
+
+                        .requestMatchers(HttpMethod.GET, "/clientes").permitAll()
                         .requestMatchers(HttpMethod.POST, "/clientes").permitAll() // Solo para crear cliente al registrar
-                        .requestMatchers(HttpMethod.POST, "/clientes/**").hasRole("CLIENTE") // Resto de POSTs protegidos
+                        .requestMatchers(HttpMethod.POST, "/clientes/**").permitAll() // Resto de POSTs protegidos
 
                         .requestMatchers("/ventas/**").hasAnyRole("ADMINISTRADOR", "CLIENTE")
                         .requestMatchers("/licencias/**").hasRole("ADMINISTRADOR")

@@ -11,4 +11,5 @@ public interface ClienteService {
     Cliente guardar(Cliente cliente);
     Cliente actualizar(Integer id, Cliente cliente);
     void eliminar(Integer id);
+    Cliente habilitarCliente(Integer id,String estado);
 }

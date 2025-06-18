@@ -3,11 +3,10 @@ package com.example.pdcliente.service.impl;
 import com.example.pdcliente.entity.Cliente;
 import com.example.pdcliente.repository.ClienteRepository;
 import com.example.pdcliente.service.ClienteService;
-import io.micrometer.core.instrument.config.MeterFilter;
+import com.example.pdcliente.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import org.yaml.snakeyaml.events.MappingEndEvent;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,8 +17,6 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
-    @Autowired
-    private MeterFilter metricsHttpServerUriTagFilter;
 
     @Override
     public List<Cliente> listar() {
@@ -41,10 +38,9 @@ public class ClienteServiceImpl implements ClienteService {
     if (clienteRepository.existsByRucDni(cliente.getRucDni())){
             throw new DataIntegrityViolationException("Ya existe un cliente con ese RUC/DNI");
         }
-    String NombreCapitalizado = capitalizarNombre(cliente.getNombre());
-        cliente.setNombre(NombreCapitalizado);
+        cliente.setNombre(StringUtils.capitalizarNombre(cliente.getNombre()));
         cliente.setDireccion(cliente.getDireccion());
-        cliente.setEmail(cliente.getEmail());
+        cliente.setEmail(StringUtils.esCorreoValido(cliente.getEmail()));
         cliente.setTelefono(cliente.getTelefono());
         cliente.setFecha(LocalDateTime.now());
         cliente.setEstado(cliente.getEstado());
@@ -64,10 +60,11 @@ public class ClienteServiceImpl implements ClienteService {
                 id + " no existe "));
 
         clienteExistente.setDireccion( cliente.getDireccion());
-        clienteExistente.setEmail(cliente.getEmail());
+        cliente.setEmail(StringUtils.esCorreoValido(cliente.getEmail()));
+        clienteExistente.setEmail(StringUtils.esCorreoValido(cliente.getEmail()));
         clienteExistente.setTelefono(cliente.getTelefono());
         clienteExistente.setEstado(cliente.getEstado());
-        clienteExistente.setNombre(cliente.getNombre());
+        clienteExistente.setNombre(StringUtils.capitalizarNombre(cliente.getNombre()));
         clienteExistente.setRucDni(cliente.getRucDni());
 
         return clienteRepository.save(clienteExistente);
@@ -81,19 +78,19 @@ public class ClienteServiceImpl implements ClienteService {
          clienteRepository.deleteById(id);
     }
 
-    public String capitalizarNombre(String nombre){
-        if (nombre==null||nombre.isEmpty()){
-            return  nombre;
+    @Override
+    public Cliente habilitarCliente(Integer id,String estado) {
+
+        Optional<Cliente> cliente = clienteRepository.findById(id);
+        if (cliente.isPresent()){
+            Cliente cliente1 = cliente.get();
+            cliente1.setEstado("Habilitado");
+            clienteRepository.save(cliente1);
+            return cliente1;
+
+        }else{
+            throw new IllegalArgumentException("El cliente con id " + id + " no ha sido encontrado");
         }
-        String[] palabras = nombre.split(" ");
-        StringBuilder nombreCapitalizado = new StringBuilder();
-        for (String palabra: palabras){
-            if(palabra.length() > 0 ){
-                nombreCapitalizado.append(palabra.substring(0,1).toUpperCase())
-                        .append(palabra.substring(1).toLowerCase())
-                        .append(" ");
-            }
-        }
-            return nombreCapitalizado.toString().trim();
     }
+
 }

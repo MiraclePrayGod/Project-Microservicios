@@ -1,0 +1,11 @@
+<h2>Registro de Cliente</h2>
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <input formControlName="username" placeholder="Usuario" />
+  <input type="password" formControlName="password" placeholder="Contraseña" />
+  <input formControlName="nombre" placeholder="Nombre completo" />
+  <input formControlName="rucDni" placeholder="RUC/DNI" />
+  <input formControlName="email" placeholder="Email" />
+  <input formControlName="telefono" placeholder="Teléfono" />
+  <input formControlName="direccion" placeholder="Dirección" />
+  <button type="submit">Registrarse</button>
+</form>

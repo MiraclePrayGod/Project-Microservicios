@@ -1,0 +1,14 @@
+<!-- src/app/pages/client/catalog/catalog.component.html -->
+<!-- catalog.component.html -->
+<div *ngIf="loading">Cargando productos...</div>
+<div *ngIf="!loading && productos.length === 0">No hay productos disponibles.</div>
+<div *ngIf="!loading && productos.length > 0">
+  <div *ngFor="let producto of productos" class="producto-card">
+  <h3>{{ producto.nombre }}</h3>
+  <p>{{ producto.categoria }}</p>
+  <p>Precio: {{ producto.precioUnitario | currency }}</p>
+  <button (click)="comprar(producto)">Comprar</button>
+
+</div>
+<button (click)="Pago(Pago)">Registrar PAgo</button>
+</div>

@@ -18,6 +18,7 @@ import feign.FeignException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -35,6 +36,8 @@ public class VentaServiceImpl implements VentaService {
 
     private final ClienteFeing clienteClient;
     private final ProductoFeing productoClient;
+
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Override
     @Transactional
@@ -95,7 +98,6 @@ public class VentaServiceImpl implements VentaService {
         dto.setFechaEmision(venta.getFechaEmision());
         dto.setTotal(totalFactura);
         dto.setEstado(venta.getEstado());
-
 
         return dto;
 
@@ -213,12 +215,12 @@ public class VentaServiceImpl implements VentaService {
         if (totalPagado.compareTo(venta.getTotal()) >= 0) {
             venta.setEstado("PAGADO");
             ventaRepository.save(venta);
+            clienteClient.actualizarEstado(dto.getClienteId(),"ACTIVO");
         }
 
         // 🔁 Retornar DTO actualizado
         dto.setId(pago.getId());
         dto.setFechaPago(pago.getFechaPago());
-
         return dto;
     }
 
@@ -288,4 +290,8 @@ public class VentaServiceImpl implements VentaService {
                 .map(this::convertirVentaADTO)
                 .collect(Collectors.toList());
     }
+
+
+
+
 }

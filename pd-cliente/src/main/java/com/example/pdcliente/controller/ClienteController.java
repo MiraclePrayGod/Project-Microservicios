@@ -42,4 +42,11 @@
                 return ResponseEntity.noContent().build();
             }
 
+            @PutMapping("/habilitar/{clienteId}")
+            public ResponseEntity<Void> habilitarCliente(@PathVariable Integer clienteId, String estado) {
+                // Aquí actualizas el estado del cliente a "habilitado"
+                clienteService.habilitarCliente(clienteId,estado);
+                return ResponseEntity.ok().build();
+            }
+
         }

@@ -17,6 +17,11 @@ public class ClienteClientFallbackFactory implements FallbackFactory<ClienteFein
             public ResponseEntity<ClienteDTO> obtenerClientePorId(Integer id) {
                 throw new RuntimeException("No se pudo contactar con el servicio de clientes. Detalle: " + cause.getMessage());
             }
+
+            @Override
+            public ResponseEntity<Void>  actualizarEstado(Integer id, String estado) {
+                throw new RuntimeException("No se pudo contactar con el servicio de clientes. Detalle: " + cause.getMessage());
+            }
         };
     }
 }
