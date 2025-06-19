@@ -215,6 +215,7 @@ public class VentaServiceImpl implements VentaService {
         if (totalPagado.compareTo(venta.getTotal()) >= 0) {
             venta.setEstado("PAGADO");
             ventaRepository.save(venta);
+
             clienteClient.actualizarEstado(dto.getClienteId(),"ACTIVO");
         }
 

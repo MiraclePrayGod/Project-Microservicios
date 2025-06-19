@@ -19,6 +19,9 @@ public class ProductoService {
     }
 
     public Optional<Producto> obtenerPorId(Long id) {
+        if (productoRepository.existsById(id)){
+
+        }
         return productoRepository.findById(id);
     }
 

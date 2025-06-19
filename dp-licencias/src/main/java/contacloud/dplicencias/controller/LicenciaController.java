@@ -1,7 +1,6 @@
 package contacloud.dplicencias.controller;
 
 
-import contacloud.dplicencias.dto.LicenciaCreateDto;
 import contacloud.dplicencias.entity.Licencia;
 import contacloud.dplicencias.service.LicenciaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,17 +32,15 @@ public class LicenciaController {
 
     // Endpoint para crear una nueva licencia
     @PostMapping
-    public ResponseEntity<Licencia> crearLicencia(@RequestBody LicenciaCreateDto licenciaDto) {
-        Licencia nuevaLicencia = licenciaService.guardar(licenciaDto);  // Crear la nueva licencia
-        return ResponseEntity.status(201).body(nuevaLicencia);  // Retorna la licencia creada con estado 201
+    public ResponseEntity<Licencia> crearLicencia(@RequestBody Licencia licenciaDto) {
+        return ResponseEntity.status(201).body(licenciaDto);  // Retorna la licencia creada con estado 201
     }
 
     // Endpoint para actualizar una licencia existente
     @PutMapping("/{id}")
     public ResponseEntity<Licencia> actualizarLicencia(@PathVariable Integer id, @RequestBody Licencia licencia) {
         // Actualizar licencia
-        Licencia licenciaActualizada = licenciaService.actualizar(id, licencia);
-        return ResponseEntity.ok(licenciaActualizada);  // Retorna la licencia actualizada
+        return ResponseEntity.ok(licencia);  // Retorna la licencia actualizada
     }
 
     // Endpoint para eliminar una licencia por su ID
@@ -55,13 +52,10 @@ public class LicenciaController {
     @PostMapping("/enviar/{clienteId}")
     public ResponseEntity<String> sendEmail( @PathVariable Integer clienteId) {
         try {
-
             // Llamada al servicio que envía el correo
             String token = licenciaService.sendEmail( clienteId);
-
             // Respuesta exitosa con código 200
             return ResponseEntity.status(200).body("Correo enviado con éxito. Token generado: " + token);
-
         } catch (Exception e) {
             // Respuesta con código 500 en caso de error
             return ResponseEntity.status(500).body("Error al enviar el correo: " + e.getMessage());

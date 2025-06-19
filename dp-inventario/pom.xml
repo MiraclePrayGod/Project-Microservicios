@@ -28,7 +28,7 @@
     </scm>
     <properties>
         <java.version>17</java.version>
-        <spring-cloud.version>2023.0.3</spring-cloud.version>
+        <spring-cloud.version>2023.0.3</spring-cloud.version> <!-- Ejemplo de versión -->
     </properties>
     <dependencies>
         <!-- Dependencias del primer proyecto -->
@@ -93,6 +93,7 @@
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
+                            <version>1.18.30</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
@@ -112,4 +113,3 @@
         </plugins>
     </build>
 </project>
-
