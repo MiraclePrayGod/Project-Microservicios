@@ -30,27 +30,28 @@ spring:
           uri: lb://dp-inventario
           predicates:
             - Path=/movimientos/**, /productos/**
-          filters:
+          filters: -AuthFilter
 
         - id: dp-cliente
           uri: lb://pd-cliente
           predicates:
             - Path=/clientes/**
-          filters:
+          filters: -AuthFilter
 
         - id: dp-licencias
           uri: lb://dp-licencias
           predicates:
             - Path=/licencias/**
-          filters:
+          filters: -AuthFilter
 
         - id: pd-venta
           uri: lb://pd-venta
           predicates:
             - Path=/ventas/**
-          filters:
+          filters: -AuthFilter
 
         - id: auth-service
           uri: lb://auth-service
           predicates:
             - Path=/auth/**
+
