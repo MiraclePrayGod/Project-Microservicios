@@ -57,7 +57,7 @@ public class LicenciaSeriveImpl implements LicenciaService {
             for (LicenciaDetalle detalle: licencia.getDetalles()) {
                 VentaDto ventaDto = ventaFeing.obtenerPorId(detalle.getVentaId()).getBody();
                 detalle.setVentaDto(ventaDto);
-                ProductoDto productoDto = productoFeing.obtenerProductoPorId(detalle.getProductoId());
+                ProductoDto productoDto = productoFeing.obtenerProductoPorId(detalle.getProductoId()).getBody();
                 detalle.setProductoDato(productoDto);
             }
         }
