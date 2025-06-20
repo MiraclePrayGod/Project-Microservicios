@@ -1,42 +1,24 @@
-spring:
-  application:
-    name: auth-service
-  datasource:
-    url: jdbc:mysql://localhost:3306/auth-service
-    password:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    open-in-view: false
-    properties:
-      hibernate:
-        format_sql: true
 
 server:
-  #port: 8081
-  port: ${PORT:${SERVER_PORT:0}}
-
-springdoc:
-  api-docs:
-    enabled: true
-  swagger-ui:
-    enabled: true
-    path: /doc/swagger-ui.html
+  port: ${PORT:${SERVERS_PORT:0}}
+spring:
+  jpa:
+    hibernate.ddl-auto: update
+    generate-ddl: true
+    show-sql: true
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/pd_authdb
+    username: root
+    password:
 
 eureka:
   client:
     serviceUrl:
-      defaultZone:
-        ${EUREKA_URI:http://localhost:8090/eureka}
-      #http://localhost:8090/eureka
+      #defaultZone: http://localhost:8090/eureka
+      defaultZone: ${EUREKA_URI:http://localhost:8090/eureka}
   instance:
-    instance-id:
-    ${spring:
-      application:
-        name}:${spring:
-          application:
-            instance_id:${random:
-              value}}:
     #hostname: localhost
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+jwt:
+  secret: secret

@@ -15,5 +15,3 @@ management:
     health:
       show-details: always
 
-jwt:
-  secret: mi_clave_super_secreta_de_32_bytes_123456
