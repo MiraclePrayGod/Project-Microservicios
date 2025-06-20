@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.5</version> <!-- Más estable aún -->
+        <version>3.3.3</version> <!-- Más estable aún -->
 
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
@@ -29,6 +29,7 @@
     </scm>
     <properties>
         <java.version>17</java.version>
+        <spring-cloud.version>2023.0.3</spring-cloud.version> <!-- Ejemplo de versión -->
     </properties>
     <dependencies>
         <dependency>
@@ -83,7 +84,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.36</version>
+            <optional>true</optional>
         </dependency>
 
         <!-- 🔽 DEPENDENCIAS PARA TEST -->
@@ -112,7 +113,7 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>2023.0.1</version> <!-- Leyton -->
+                <version>${spring-cloud.version}</version> <!-- Definir la versión en un lugar central -->
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -122,8 +123,28 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
             </plugin>
         </plugins>
     </build>
